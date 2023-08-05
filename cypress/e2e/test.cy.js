@@ -35,22 +35,97 @@ describe("Case", () => {
       cy.get('a[href="/windows/new"]').invoke("removeAttr", "target").click();
       cy.contains("New Window").should("be.visible");
     });
-    it("Sortable Data Tables", () => {
+    it.only("Sortable Data Tables", () => {
       // - Sortable Data Tables"
       cy.get('a[href="/tables"]').click();
 
-      cy.get("#table1 > thead").click();
-      cy.get('#table1 > tbody >  > :nth-child(1)').then(($titles) => {
-        const title = $titles.toArray().map(($el) => $el.innerText);
-        expect(title.sort()).to.be.sorted();
-      });
+      // 1 table
+      for (let i = 1; i <= 5; i++) {
+        if (i === 4) {
+          cy.get(`#table1 > thead > tr > :nth-child(${i})`)
+            .click()
+            .get(`#table1 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(
+                names.map((element) => parseInt(element.replace("$", ""), 10))
+              ).to.be.ascending;
+            });
+          cy.get(".headerSortDown")
+            .click()
+            .get(`#table1 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(
+                names.map((element) => parseInt(element.replace("$", ""), 10))
+              ).to.be.descending;
+            });
+        } else {
+          cy.get(`#table1 > thead > tr > :nth-child(${i})`)
+            .click()
+            .get(`#table1 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(names).to.be.ascending;
+            });
+          cy.get(".headerSortDown")
+            .click()
+            .get(`#table1 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(names).to.be.descending;
+            });
+        }
+        cy.get("#table1 > tbody >> :nth-child(1)").should("have.length", 4);
+      }
 
-      cy.get("#table2 > thead ").click();
-      cy.get("#table2 > tbody > > .last-name").then(($titles) => {
-        const title = $titles.toArray().map(($el) => $el.innerText);
-        expect(title.sort()).to.be.sorted();
-      });
+      // 2 table
+      for (let i = 1; i <= 5; i++) {
+        if (i === 4) {
+          cy.get(`#table2 > thead > tr > :nth-child(${i})`)
+            .click()
+            .get(`#table2 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(
+                names.map((element) => parseInt(element.replace("$", ""), 10))
+              ).to.be.ascending;
+            });
+          cy.get(".headerSortDown")
+            .click()
+            .get(`#table2 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(
+                names.map((element) => parseInt(element.replace("$", ""), 10))
+              ).to.be.descending;
+            });
+        } else {
+          cy.get(`#table2 > thead > tr > :nth-child(${i})`)
+            .click()
+            .get(`#table2 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(names).to.be.ascending;
+            });
+          cy.get(".headerSortDown")
+            .click()
+            .get(`#table2 > tbody >> :nth-child(${i})`)
+            .should(($cells) => {
+              const names = Cypress._.map($cells, ($cell) => $cell.innerText);
+              console.log(names);
+              expect(names).to.be.descending;
+            });
+        }
+        cy.get("#table2 > tbody >> :nth-child(1)").should("have.length", 4);
+      }
     });
   });
 });
-// });
